@@ -7,9 +7,7 @@ function App() {
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          React Infinite Scroll Movies Project.
-        </p>
+        <p>React Infinite Scroll Movies Project.</p>
       </header>
     </div>
   );

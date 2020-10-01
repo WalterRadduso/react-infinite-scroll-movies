@@ -1,11 +1,19 @@
 import React from 'react';
 
+// Provider
+import { HomeProvider } from '../../contexts/Home';
+
+// Components
+import HomeContent from '../../components/HomeContent';
+
 const HomePage = () => (
-  <div className="Home">
-    <header className="Home-header">
-      <p>Infinite Scroll</p>
-    </header>
-  </div>
+  <HomeProvider>
+    <div className="Home">
+      <p>Infinite Scroll - Movie List</p>
+    </div>
+
+    <HomeContent />
+  </HomeProvider>
 );
 
 export default HomePage;

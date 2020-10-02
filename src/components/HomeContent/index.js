@@ -11,13 +11,13 @@ import { Loader } from 'semantic-ui-react';
 
 const HomeContent = () => {
   const {
-    state: { genres, loading, movies },
+    state: { genres, loading },
   } = useContext(HomeContext);
 
   return loading ? (
     <Loader active content="loading..." inline="centered" />
   ) : (
-    <MoviesList genres={genres} {...movies} />
+    <MoviesList genres={genres} />
   );
 };
 

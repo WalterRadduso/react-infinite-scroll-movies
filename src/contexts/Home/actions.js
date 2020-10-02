@@ -22,9 +22,9 @@ export const getMovies = async function (dispatch, page, sortBy) {
 
 export const getGenre = async function (dispatch) {
   try {
-    const data = await MovieService.getGenre();
+    const { genres } = await MovieService.getGenre();
 
-    dispatch({ type: types.GET_GENRE, data });
+    dispatch({ type: types.GET_GENRE, data: genres });
   } catch (error) {
     if (error.response) {
       const { data } = error.response;

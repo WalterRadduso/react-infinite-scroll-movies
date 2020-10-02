@@ -4,7 +4,7 @@ import React, { createContext, useEffect, useMemo, useReducer } from 'react';
 import reducer from './reducer';
 
 // Action
-import { getGenreMovies } from './actions';
+import { getGenre } from './actions';
 
 const HomeContext = createContext();
 const { Provider } = HomeContext;
@@ -13,7 +13,7 @@ const HomeProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, {});
 
   useEffect(() => {
-    getGenreMovies(dispatch, 1, 'title.asc');
+    getGenre(dispatch);
   }, []);
 
   const contextValue = useMemo(

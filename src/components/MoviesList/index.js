@@ -1,16 +1,78 @@
-import React from 'react';
-import { arrayOf, number, shape } from 'prop-types';
+import React, { Fragment, useCallback, useRef, useState } from 'react';
+import { arrayOf, shape, string } from 'prop-types';
+import { useHistory } from 'react-router-dom';
+
+// Hooks
+import useGetMovies from '../../hooks/useGetMovies';
 
 // Semantic UI
 import { Button, Icon, Table } from 'semantic-ui-react';
 
-const MoviesList = ({ genres, page, results }) => {
-  console.log('genres: ', genres);
-  console.log('page: ', page);
-  console.log('results: ', results);
+const MoviesList = ({ genres, sortBy }) => {
+  const [pageNumber, setPageNumber] = useState(1);
+
+  const { error, hasMore, loading, movies } = useGetMovies(pageNumber, 'title.asc');
+
+  const observer = useRef();
+
+  const lastMovieTableRef = useCallback(
+    node => {
+      if (loading) return;
+
+      if (observer.current) {
+        observer.current.disconnect();
+      }
+
+      observer.current = new IntersectionObserver(entries => {
+        if (entries[0].isIntersecting && hasMore) {
+          setPageNumber(prevPageNumber => prevPageNumber + 1);
+        }
+      });
+
+      if (node) {
+        observer.current.observe(node);
+      }
+    },
+    [loading, hasMore],
+  );
+
+  const footerInfo = () => {
+    if (loading) {
+      return (
+        <Fragment>
+          <Icon loading name="spinner" />
+          Loading...
+        </Fragment>
+      );
+    } else {
+      if (error) {
+        return (
+          <Fragment>
+            <Icon name="frown" />
+            There was an error loading new movies.
+          </Fragment>
+        );
+      } else if (!hasMore) {
+        return (
+          <Fragment>
+            <Icon name="smile" />
+            There are no more movies on the list.
+          </Fragment>
+        );
+      }
+
+      return (
+        <Fragment>
+          <Icon name="arrow alternate circle down" />
+          Scroll to load more movies...
+          <span ref={lastMovieTableRef} />
+        </Fragment>
+      );
+    }
+  };
 
   return (
-    results && (
+    movies && (
       <Table celled>
         <Table.Header>
           <Table.Row>
@@ -26,7 +88,7 @@ const MoviesList = ({ genres, page, results }) => {
         </Table.Header>
 
         <Table.Body>
-          {results.map(movie => {
+          {movies.map(movie => {
             const {
               id,
               genre_ids: genreIds,
@@ -72,8 +134,7 @@ const MoviesList = ({ genres, page, results }) => {
         <Table.Footer>
           <Table.Row>
             <Table.HeaderCell className="right aligned" colSpan="8">
-              <Icon name="arrow alternate circle down" />
-              Scroll to load more movies...
+              {footerInfo()}
             </Table.HeaderCell>
           </Table.Row>
         </Table.Footer>
@@ -84,14 +145,12 @@ const MoviesList = ({ genres, page, results }) => {
 
 MoviesList.propTypes = {
   genre: arrayOf(shape({})),
-  page: number,
-  results: arrayOf(shape({})),
+  sortBy: string,
 };
 
 MoviesList.defaultProps = {
   genres: null,
-  page: null,
-  results: null,
+  sortBy: null,
 };
 
 export default MoviesList;

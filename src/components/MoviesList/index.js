@@ -1,6 +1,5 @@
 import React, { Fragment, useCallback, useRef, useState } from 'react';
 import { arrayOf, shape, string } from 'prop-types';
-import { useHistory } from 'react-router-dom';
 
 // Hooks
 import useGetMovies from '../../hooks/useGetMovies';

@@ -1,0 +1,16 @@
+.movie-details {
+  margin: 20px;
+
+  .movie-details__image {
+    margin: auto;
+  }
+
+  .movie-details__rating {
+    align-items: center;
+    height: 32px;
+  }
+
+  .movie-details__button {
+    margin-top: 14px;
+  }
+}

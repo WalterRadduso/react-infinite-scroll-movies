@@ -1,7 +1,8 @@
 import axios from 'axios';
-import { API_KEY, API_URL_V3 } from '../config';
+import { API_KEY, API_URL_V3, SESSION_ID } from '../config';
 
 const configHeaders = {
+  'Content-Type': 'application/json',
   Authorization: `Bearer ${API_KEY}`,
 };
 
@@ -29,6 +30,41 @@ export default {
 
     try {
       const { data } = await axios.get(`${API_URL_V3}/genre/movie/list`, config);
+
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  getMovieDetails: async function (movieId) {
+    const config = {
+      headers: configHeaders,
+    };
+
+    try {
+      const { data } = await axios.get(`${API_URL_V3}/movie/${movieId}`, config);
+
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  rateMovie: async function (movieId, rating) {
+    const config = {
+      headers: configHeaders,
+      params: {
+        session_id: SESSION_ID,
+      },
+    };
+
+    try {
+      const { data } = await axios.post(
+        `${API_URL_V3}/movie/${movieId}/rating`,
+        {
+          value: rating,
+        },
+        config,
+      );
 
       return data;
     } catch (error) {

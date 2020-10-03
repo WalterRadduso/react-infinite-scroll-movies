@@ -1,4 +1,5 @@
 import React, { Fragment, useCallback, useRef, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { arrayOf, shape } from 'prop-types';
 
 // Config
@@ -11,6 +12,7 @@ import useGetMovies from '../../hooks/useGetMovies';
 import { Button, Icon, Table } from 'semantic-ui-react';
 
 const MoviesList = ({ genres }) => {
+  let history = useHistory();
   const [pageNumber, setPageNumber] = useState(1);
 
   const { error, hasMore, loading, movies } = useGetMovies(pageNumber, 'title.asc');
@@ -73,6 +75,10 @@ const MoviesList = ({ genres }) => {
     }
   };
 
+  const viewMovieDetails = movieId => {
+    history.push(`/details/${movieId}`);
+  };
+
   return (
     movies && (
       <Table className="movie-list" celled>
@@ -87,7 +93,7 @@ const MoviesList = ({ genres }) => {
 
         <Table.Body>
           {movies.map(movie => {
-            const { poster_path: movieImg, id, genre_ids: genreIds, title } = movie;
+            const { id, genre_ids: genreIds, poster_path: movieImg, title } = movie;
 
             let movieGenres = [];
 
@@ -115,7 +121,9 @@ const MoviesList = ({ genres }) => {
                 </Table.Cell>
                 <Table.Cell>{title}</Table.Cell>
                 <Table.Cell className="movie-list-details">
-                  <Button primary>Details</Button>
+                  <Button onClick={() => viewMovieDetails(id)} primary>
+                    Details
+                  </Button>
                 </Table.Cell>
               </Table.Row>
             );

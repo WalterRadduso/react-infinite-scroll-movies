@@ -1,5 +1,7 @@
 .movie-details {
-  margin: 20px;
+  .movie-details__title {
+    margin-bottom: 20px;
+  }
 
   .movie-details__image {
     margin: auto;

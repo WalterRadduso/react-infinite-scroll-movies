@@ -10,11 +10,9 @@ export const getMovies = async function (dispatch, page) {
     dispatch({ type: types.GET_MOVIES, data });
   } catch (error) {
     if (error.response) {
-      const { data } = error.response;
-
       dispatch({
         type: types.GET_MOVIES_ERROR,
-        data,
+        data: true,
       });
     }
   }
@@ -27,11 +25,9 @@ export const getGenre = async function (dispatch) {
     dispatch({ type: types.GET_GENRE, data: genres });
   } catch (error) {
     if (error.response) {
-      const { data } = error.response;
-
       dispatch({
         type: types.GET_GENRE_ERROR,
-        data,
+        data: true,
       });
     }
   }

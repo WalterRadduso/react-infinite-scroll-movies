@@ -13,11 +13,9 @@ export const getMovieDetails = async function (dispatch, page) {
     });
   } catch (error) {
     if (error.response) {
-      const { data } = error.response;
-
       dispatch({
         type: types.GET_MOVIE_DETAILS_ERROR,
-        data,
+        data: true,
       });
     }
   }
@@ -35,11 +33,9 @@ export const rateMovie = async function (dispatch, movieId, rating) {
     });
   } catch (error) {
     if (error.response) {
-      const { data } = error.response;
-
       dispatch({
         type: types.POST_RATE_MOVIE_ERROR,
-        data,
+        data: true,
       });
     }
   }

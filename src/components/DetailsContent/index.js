@@ -5,19 +5,49 @@ import { DetailsContext } from '../../contexts/Details';
 
 // Components
 import MovieDetails from '../MovieDetails';
+import { useHistory } from 'react-router-dom';
 
 // Semantic UI
-import { Loader } from 'semantic-ui-react';
+import { Button, Container, Icon, Loader, Message } from 'semantic-ui-react';
 
 const DetailsContent = () => {
   const {
-    state: { loading, movieDetails },
+    state: { loading, movieDetails, movieDetailsError },
   } = useContext(DetailsContext);
+  let history = useHistory();
 
-  return !loading && movieDetails ? (
-    <MovieDetails />
-  ) : (
-    <Loader active content="loading..." inline="centered" />
+  const loadContent = (loading, movieDetails, movieDetailsError) => {
+    if (!loading && movieDetails) {
+      return <MovieDetails history={history} />;
+    } else if (loading) {
+      return <Loader active content="loading..." inline="centered" />;
+    } else if (movieDetailsError) {
+      return (
+        <Message
+          header="Oops"
+          content="There was a problem getting the movie details. Try again refreshing this page or later."
+        />
+      );
+    }
+
+    return null;
+  };
+
+  const viewAllMovies = () => {
+    history.goBack();
+  };
+
+  return (
+    <Container className="details-content">
+      {loadContent(loading, movieDetails, movieDetailsError)}
+
+      <Button animated onClick={() => viewAllMovies()} primary className="movie-details__button">
+        <Button.Content visible>Go Back</Button.Content>
+        <Button.Content hidden>
+          <Icon name="arrow left" />
+        </Button.Content>
+      </Button>
+    </Container>
   );
 };
 

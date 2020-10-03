@@ -1,5 +1,4 @@
 import React, { Fragment, useContext, useState } from 'react';
-import { useHistory } from 'react-router-dom';
 
 // Config
 import { IMAGES_URL } from '../../config';
@@ -11,7 +10,7 @@ import { rateMovie } from '../../contexts/Details/actions';
 import { DetailsContext } from '../../contexts/Details';
 
 // Semantic UI
-import { Button, Container, Grid, Header, Icon, Image, Loader, Rating } from 'semantic-ui-react';
+import { Container, Grid, Header, Image, Loader, Message, Rating } from 'semantic-ui-react';
 
 const MovieDetails = () => {
   const {
@@ -26,24 +25,25 @@ const MovieDetails = () => {
         vote_average: voteAverage,
         vote_count: voteCount,
       },
+      movieRatedError,
     },
   } = useContext(DetailsContext);
   const [userRate, setUserRate] = useState(0);
-
-  let history = useHistory();
+  const [showMessage, setShowMessage] = useState(true);
 
   const rateThisMove = async (e, { rating }) => {
+    setShowMessage(true);
     await rateMovie(dispatch, movieId, rating);
     setUserRate(rating);
   };
 
-  const viewAllMovies = () => {
-    history.goBack();
+  const closeErrorMessage = () => {
+    setShowMessage(false);
   };
 
   return (
     <Container className="movie-details">
-      <Header as="h2" textAlign="center">
+      <Header as="h2" className="movie-details__title" textAlign="center">
         {title}
       </Header>
 
@@ -99,19 +99,20 @@ const MovieDetails = () => {
                 className="movie-details__rating"
                 onRate={rateThisMove}
               />
+
+              {movieRatedError && showMessage && (
+                <Message
+                  onDismiss={() => closeErrorMessage()}
+                  header="Oops"
+                  content="There was a problem voting this movie. Try again later."
+                />
+              )}
             </Grid.Column>
           </Grid.Row>
         </Grid>
       ) : (
         <Loader active inline="centered" />
       )}
-
-      <Button animated onClick={() => viewAllMovies()} primary className="movie-details__button">
-        <Button.Content visible>Go Back</Button.Content>
-        <Button.Content hidden>
-          <Icon name="arrow left" />
-        </Button.Content>
-      </Button>
     </Container>
   );
 };

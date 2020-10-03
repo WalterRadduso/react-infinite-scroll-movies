@@ -1,11 +1,11 @@
 import types from './types';
 import MovieService from '../../services/MovieService';
 
-export const getMovies = async function (dispatch, page, sortBy) {
+export const getMovies = async function (dispatch, page) {
   dispatch({ type: types.LOADING, data: true });
 
   try {
-    const data = await MovieService.getMovies(page, sortBy);
+    const data = await MovieService.getMovies(page);
 
     dispatch({ type: types.GET_MOVIES, data });
   } catch (error) {
@@ -37,9 +37,9 @@ export const getGenre = async function (dispatch) {
   }
 };
 
-export const getGenreMovies = async function (dispatch, page, sortBy) {
+export const getGenreMovies = async function (dispatch, page) {
   try {
-    const movies = await MovieService.getMovies(page, sortBy);
+    const movies = await MovieService.getMovies(page);
     const { genres } = await MovieService.getGenre();
 
     dispatch({

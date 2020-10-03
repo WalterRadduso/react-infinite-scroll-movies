@@ -1,5 +1,8 @@
 import React, { Fragment, useCallback, useRef, useState } from 'react';
-import { arrayOf, shape, string } from 'prop-types';
+import { arrayOf, shape } from 'prop-types';
+
+// Config
+import { IMAGES_URL } from '../../config';
 
 // Hooks
 import useGetMovies from '../../hooks/useGetMovies';
@@ -7,7 +10,7 @@ import useGetMovies from '../../hooks/useGetMovies';
 // Semantic UI
 import { Button, Icon, Table } from 'semantic-ui-react';
 
-const MoviesList = ({ genres, sortBy }) => {
+const MoviesList = ({ genres }) => {
   const [pageNumber, setPageNumber] = useState(1);
 
   const { error, hasMore, loading, movies } = useGetMovies(pageNumber, 'title.asc');
@@ -72,36 +75,23 @@ const MoviesList = ({ genres, sortBy }) => {
 
   return (
     movies && (
-      <Table celled>
+      <Table className="movie-list" celled>
         <Table.Header>
           <Table.Row>
+            <Table.HeaderCell>Image</Table.HeaderCell>
             <Table.HeaderCell>Genre</Table.HeaderCell>
-            <Table.HeaderCell>Language</Table.HeaderCell>
             <Table.HeaderCell>Title</Table.HeaderCell>
-            <Table.HeaderCell>Overview</Table.HeaderCell>
-            <Table.HeaderCell>Popularity</Table.HeaderCell>
-            <Table.HeaderCell>Release Date</Table.HeaderCell>
-            <Table.HeaderCell>Votes</Table.HeaderCell>
             <Table.HeaderCell />
           </Table.Row>
         </Table.Header>
 
         <Table.Body>
           {movies.map(movie => {
-            const {
-              id,
-              genre_ids: genreIds,
-              original_language: language,
-              overview,
-              popularity,
-              release_date: releaseDate,
-              title,
-              vote_count: votes,
-            } = movie;
+            const { poster_path: movieImg, id, genre_ids: genreIds, title } = movie;
 
             let movieGenres = [];
 
-            if (genres.length) {
+            if (genres && genres.length) {
               genres.map(genre => {
                 if (genreIds.includes(genre.id)) {
                   movieGenres.push(genre.name);
@@ -113,16 +103,18 @@ const MoviesList = ({ genres, sortBy }) => {
 
             return (
               <Table.Row key={id}>
+                <Table.Cell className="movie-list-poster">
+                  <img
+                    className="movie-list-poster__image"
+                    src={`${IMAGES_URL}/w200/${movieImg}`}
+                    alt=""
+                  />
+                </Table.Cell>
                 <Table.Cell>
                   {movieGenres.length ? movieGenres.map(genre => <p key={genre}>{genre}</p>) : '-'}
                 </Table.Cell>
-                <Table.Cell>{language.toUpperCase()}</Table.Cell>
                 <Table.Cell>{title}</Table.Cell>
-                <Table.Cell>{overview}</Table.Cell>
-                <Table.Cell>{popularity}</Table.Cell>
-                <Table.Cell>{releaseDate}</Table.Cell>
-                <Table.Cell>{votes}</Table.Cell>
-                <Table.Cell>
+                <Table.Cell className="movie-list-details">
                   <Button primary>Details</Button>
                 </Table.Cell>
               </Table.Row>
@@ -132,7 +124,7 @@ const MoviesList = ({ genres, sortBy }) => {
 
         <Table.Footer>
           <Table.Row>
-            <Table.HeaderCell className="right aligned" colSpan="8">
+            <Table.HeaderCell className="right aligned" colSpan="4">
               {footerInfo()}
             </Table.HeaderCell>
           </Table.Row>
@@ -144,12 +136,10 @@ const MoviesList = ({ genres, sortBy }) => {
 
 MoviesList.propTypes = {
   genre: arrayOf(shape({})),
-  sortBy: string,
 };
 
 MoviesList.defaultProps = {
   genres: null,
-  sortBy: null,
 };
 
 export default MoviesList;

@@ -1,0 +1,16 @@
+.movie-list {
+  margin-top: 0 !important;
+
+  .movie-list-poster {
+    display: flex;
+    justify-content: center;
+
+    .movie-list-poster__image {
+      width: 100px;
+    }
+  }
+
+  .movie-list-details {
+    text-align: center !important;
+  }
+}

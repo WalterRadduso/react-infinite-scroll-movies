@@ -1,0 +1,12 @@
+.Home {
+  align-items: center;
+  background-color: $bg-color;
+  display: flex;
+  height: 60px;
+  justify-content: center;
+
+  p {
+    color: white;
+    font-size: calc(10px + 2vmin);
+  }
+}
